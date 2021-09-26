@@ -40,10 +40,8 @@ function onDeviceReady() {
         
     },false);*/
 
-
-
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
-    var mymap = L.map('mapid').setView([51.505, -0.09], 13);
+    var mymap = L.map('mapid').setView([-28.9356, -49.4864], 14);
     
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FkdTA4IiwiYSI6ImNrdTBoOHR0aTBydTkzMXBtcGhsdnVoaG8ifQ.L7KrdCXevoTgbjNo2-zJug', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -53,7 +51,6 @@ function onDeviceReady() {
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoiY2FkdTA4IiwiYSI6ImNrdTBoOHR0aTBydTkzMXBtcGhsdnVoaG8ifQ.L7KrdCXevoTgbjNo2-zJug'
     }).addTo(mymap);
-
 }
 
 
@@ -69,13 +66,12 @@ function conectaServidorSockets (url)
     }
     socket.onclose = function(evt) {
         //document.getElementById('status').style.visibility='visible';
-
-               console.log('foi desconectado do servidor'+evt);
+            console.log('foi desconectado do servidor'+evt);
 
     }
+
     socket.onmessage = function(evt) {
-
-
-       console.log('recebeu mensagem:'+evt)
+       console.log('recebeu mensagem:', evt);
     }
+
 }
