@@ -1,32 +1,50 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
-// Wait for the deviceready event before using any of Cordova's device APIs.
-// See https://cordova.apache.org/docs/en/latest/cordova/events/events.html#deviceready
 document.addEventListener('deviceready', onDeviceReady, false);
+
+var socket;
 
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
+    conectaServidorSockets('ws://192.168.3.8:10000');
+
+
+    /*navigator.geolocation.getCurrentPosition(function(x){
+        try {
+            socket.send(JSON.stringify({tipo:'localizacao',dados:x}));
+
+        }
+        catch(e)
+        {
+
+        }
+
+    }, null );*/
+
+    /*navigator.geolocation.watchPosition(function(x){
+        try {
+            console.log(x.coords.latitude+'  ssss'+x.coords.longitude);
+            var d = {lat:x.coords.latitude,long:x.coords.longitude};
+
+            socket.send(JSON.stringify({tipo:'localizacao',dados:d}));
+
+        }
+        catch(e)
+        {
+        }
+    }, null,{ maximumAge: 3000, timeout: 5000, enableHighAccuracy: true } );*/
+
+
+    /*document.getElementById("teste").addEventListener('click',function(){
+
+        socket.send(JSON.stringify({tipo:'info',dados:'teste de envio quando o botao é apertado'}));
+        
+    },false);*/
+
+
+
     console.log('Running cordova-' + cordova.platformId + '@' + cordova.version);
     var mymap = L.map('mapid').setView([51.505, -0.09], 13);
-
+    
     L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiY2FkdTA4IiwiYSI6ImNrdTBoOHR0aTBydTkzMXBtcGhsdnVoaG8ifQ.L7KrdCXevoTgbjNo2-zJug', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -36,5 +54,28 @@ function onDeviceReady() {
     accessToken: 'pk.eyJ1IjoiY2FkdTA4IiwiYSI6ImNrdTBoOHR0aTBydTkzMXBtcGhsdnVoaG8ifQ.L7KrdCXevoTgbjNo2-zJug'
     }).addTo(mymap);
 
+}
 
+
+function conectaServidorSockets (url)
+{
+    socket = new ReconnectingWebSocket(url);
+
+    socket.onopen = function(evt) {
+        console.log('Conectou no servidor');
+
+        //document.getElementById('status').style.visibility='hidden';
+        socket.send(JSON.stringify({tipo:'login',dados:{id:'frr',passwd:'sxsss'}}));
+    }
+    socket.onclose = function(evt) {
+        //document.getElementById('status').style.visibility='visible';
+
+               console.log('foi desconectado do servidor'+evt);
+
+    }
+    socket.onmessage = function(evt) {
+
+
+       console.log('recebeu mensagem:'+evt)
+    }
 }
