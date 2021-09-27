@@ -12,6 +12,15 @@ paradas = [
       {'nome': 'Colégio Murialdo', 'latitude': -28.930536702986643, 'longitude': -49.48139260471865}
 ]
 
+//Todos os ônibus saem do terminal rodoviário
+onibus = [
+      {'id': 123,'nome': 'Lagoão', 'latitude': -28.93312245086673, 'longitude': -49.48671330587503},
+      {'id': 122,'nome': 'Universitario', 'latitude': -28.93312245086673, 'longitude': -49.48671330587503},
+      {'id': 132,'nome': 'Turistando', 'latitude': -28.93312245086673, 'longitude': -49.48671330587503},
+      {'id': 133,'nome': 'Volta ao Morro', 'latitude': -28.93312245086673, 'longitude': -49.48671330587503},
+      {'id': 213,'nome': 'Rio dos Anjos', 'latitude': -28.93312245086673, 'longitude': -49.48671330587503}
+]
+
 wss.on('connection', function connection(ws) {
 
       console.log('Cliente conectou');
@@ -33,6 +42,29 @@ wss.on('connection', function connection(ws) {
             }
 
             ws.send(JSON.stringify({tipo:'paradas',dados:paradas}));
-            
+
+            //Envia a posição dos ônibus a cada 1s
+            setInterval(function() {
+                  onibus = recalculaPosOnibus(onibus);
+
+                  ws.send(JSON.stringify({tipo:'onibus',dados:onibus}));
+            }, 1000);
+
       });
 });
+
+function recalculaPosOnibus(onibus)
+{
+      for(i = 0; i < 5; i++)
+      {
+            onibus[i].latitude += naleatorio();
+            onibus[i].longitude += naleatorio();      
+      }
+
+      return onibus;
+}
+
+function naleatorio()
+{
+      return (Math.random()-Math.random())/300;
+}

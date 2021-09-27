@@ -2,6 +2,8 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 var socket;
 
+var marker;
+
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
@@ -75,6 +77,10 @@ function conectaServidorSockets (url, mymap)
                 var paradas = a.dados;
                 mostraParadas(paradas, mymap);
                 break;
+            case 'onibus':
+                var onibus = a.dados;
+                mostraOnibus(onibus, mymap);
+                break;
         }
     }
 }
@@ -93,6 +99,25 @@ function mostraParadas (paradas, mymap)
 
     for(i = 0; i < 5; i++)
     {
-        L.marker([paradas[i].latitude, paradas[i].longitude], {icon: busStopIcon}).addTo(mymap).bindPopup(paradas[i].nome);;
+        L.marker([paradas[i].latitude, paradas[i].longitude], {icon: busStopIcon}).addTo(mymap).bindPopup(paradas[i].nome);
+    }
+}
+
+function mostraOnibus(onibus, mymap)
+{
+    var busIcon = L.icon({
+        iconUrl: '../img/busIcon.png',
+        
+        iconSize:     [38, 50], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+    for(i = 0; i < 5; i++)
+    {
+ 
+        L.marker([onibus[i].latitude, onibus[i].longitude], {icon: busIcon}).addTo(mymap).bindPopup(onibus[i].nome);
     }
 }
