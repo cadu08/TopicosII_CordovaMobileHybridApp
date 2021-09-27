@@ -32,11 +32,7 @@ wss.on('connection', function connection(ws) {
                         break;
             }
 
-            ws.send(JSON.stringify({tipo:'parada',dados:paradas}));
-            /*for(i = 0; i < 5; i++)
-            {
-                  ws.send(JSON.stringify({tipo:'parada',dados:paradas[i]}));
-            }*/
+            ws.send(JSON.stringify({tipo:'paradas',dados:paradas}));
             
       });
 });

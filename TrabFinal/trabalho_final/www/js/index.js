@@ -5,8 +5,6 @@ var socket;
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
 
-    conectaServidorSockets('ws://192.168.3.8:10000');
-
 
     /*navigator.geolocation.getCurrentPosition(function(x){
         try {
@@ -51,27 +49,50 @@ function onDeviceReady() {
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoiY2FkdTA4IiwiYSI6ImNrdTBoOHR0aTBydTkzMXBtcGhsdnVoaG8ifQ.L7KrdCXevoTgbjNo2-zJug'
     }).addTo(mymap);
+
+    conectaServidorSockets('ws://192.168.3.8:10000', mymap);
 }
 
 
-function conectaServidorSockets (url)
+function conectaServidorSockets (url, mymap)
 {
     socket = new ReconnectingWebSocket(url);
 
     socket.onopen = function(evt) {
         console.log('Conectou no servidor');
-
-        //document.getElementById('status').style.visibility='hidden';
         socket.send(JSON.stringify({tipo:'login',dados:{id:'frr',passwd:'sxsss'}}));
     }
     socket.onclose = function(evt) {
-        //document.getElementById('status').style.visibility='visible';
-            console.log('foi desconectado do servidor'+evt);
-
+        console.log('foi desconectado do servidor'+evt);
     }
 
-    socket.onmessage = function(evt) {
-       console.log('recebeu mensagem:', evt);
-    }
+    socket.onmessage = function incoming(evt) {
+        var a = JSON.parse(evt.data);
 
+        switch (a.tipo)
+        {
+            case 'paradas':
+                var paradas = a.dados;
+                mostraParadas(paradas, mymap);
+                break;
+        }
+    }
+}
+
+function mostraParadas (paradas, mymap)
+{
+    var busStopIcon = L.icon({
+        iconUrl: '../img/busStopIcon.png',
+        
+        iconSize:     [38, 50], // size of the icon
+        shadowSize:   [50, 64], // size of the shadow
+        iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+    for(i = 0; i < 5; i++)
+    {
+        L.marker([paradas[i].latitude, paradas[i].longitude], {icon: busStopIcon}).addTo(mymap).bindPopup(paradas[i].nome);;
+    }
 }
