@@ -37,7 +37,7 @@ wss.on('connection', function connection(ws) {
                         console.log('mensagem info recebida: '+a.dados);
                         break;
                   case 'login':
-                        console.log('mensagem login recebida: '+a.dados.id +'  '+a.dados.passwd);
+                        //console.log('mensagem login recebida: '+a.dados.id +'  '+a.dados.passwd);
                         break;
             }
 
@@ -45,9 +45,8 @@ wss.on('connection', function connection(ws) {
 
             //Envia a posição dos ônibus a cada 1s
             setInterval(function() {
-                  onibus = recalculaPosOnibus(onibus);
-
                   ws.send(JSON.stringify({tipo:'onibus',dados:onibus}));
+                  onibus = recalculaPosOnibus(onibus);
             }, 1000);
 
       });
@@ -66,5 +65,5 @@ function recalculaPosOnibus(onibus)
 
 function naleatorio()
 {
-      return (Math.random()-Math.random())/300;
+      return ((Math.random() - 0.5)*2)/1000;
 }

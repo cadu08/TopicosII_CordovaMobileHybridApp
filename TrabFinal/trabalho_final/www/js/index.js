@@ -2,7 +2,13 @@ document.addEventListener('deviceready', onDeviceReady, false);
 
 var socket;
 
-var marker;
+
+var marker = [];
+
+for(i = 0; i<5; i++)
+{
+    marker[i] = null;
+}
 
 function onDeviceReady() {
     // Cordova is now initialized. Have fun!
@@ -105,6 +111,7 @@ function mostraParadas (paradas, mymap)
 
 function mostraOnibus(onibus, mymap)
 {
+
     var busIcon = L.icon({
         iconUrl: '../img/busIcon.png',
         
@@ -115,9 +122,17 @@ function mostraOnibus(onibus, mymap)
         popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
     });
 
-    for(i = 0; i < 5; i++)
+    if(marker[0] == null)//Primeira vez
     {
- 
-        L.marker([onibus[i].latitude, onibus[i].longitude], {icon: busIcon}).addTo(mymap).bindPopup(onibus[i].nome);
+        for(i = 0; i < 5; i++)
+        {
+            marker[i] = L.marker([onibus[i].latitude, onibus[i].longitude], {icon: busIcon}).addTo(mymap).bindPopup(onibus[i].nome);
+            console.log('lat:'+onibus[i].latitude+' lng:'+onibus[i].longitude)
+        }
+    }else{
+        for(i = 0; i < 5; i++)
+        {
+            marker[i].setLatLng({lon: onibus[i].longitude, lat: onibus[i].latitude});
+        }
     }
 }
